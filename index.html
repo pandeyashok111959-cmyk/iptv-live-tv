@@ -1,323 +1,800 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live TV</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<title>India Live TV</title>
 
-    body {
-      margin: 0;
-      background: #0b0b0b;
-      color: white;
-      font-family: Arial, sans-serif;
-    }
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
 
-    header {
-      padding: 18px;
-      text-align: center;
-      background: #151515;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+<style>
+*{
+  box-sizing:border-box;
+}
 
-    h1 {
-      margin: 0 0 12px;
-      font-size: 24px;
-    }
+body{
+  margin:0;
+  background:#0b0b0b;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
 
-    #search {
-      width: 100%;
-      max-width: 500px;
-      padding: 12px;
-      border: 0;
-      border-radius: 8px;
-      font-size: 16px;
-    }
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:#111;
+  padding:15px;
+  border-bottom:1px solid #292929;
+}
 
-    #playerBox {
-      display: none;
-      padding: 12px;
-      background: #000;
-    }
+.logo{
+  text-align:center;
+  font-size:25px;
+  font-weight:bold;
+  margin-bottom:12px;
+}
 
-    video {
-      width: 100%;
-      max-height: 60vh;
-      background: black;
-    }
+.search{
+  width:100%;
+  padding:13px 15px;
+  border:0;
+  border-radius:10px;
+  font-size:16px;
+  outline:none;
+}
 
-    #nowPlaying {
-      padding: 8px 0;
-      font-weight: bold;
-    }
+.filters{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:12px 0 2px;
+}
 
-    #channels {
-      padding: 12px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-    }
+.filters button{
+  flex:none;
+  border:0;
+  padding:8px 14px;
+  border-radius:20px;
+  background:#252525;
+  color:white;
+  cursor:pointer;
+}
 
-    .channel {
-      background: #181818;
-      border-radius: 10px;
-      padding: 12px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+.filters button.active{
+  background:#e50914;
+}
 
-    .channel:hover {
-      transform: scale(1.02);
-      background: #242424;
-    }
+.playerBox{
+  display:none;
+  background:#000;
+  padding:10px;
+}
 
-    .channel img {
-      width: 100%;
-      height: 80px;
-      object-fit: contain;
-      background: white;
-      border-radius: 6px;
-    }
+video{
+  display:block;
+  width:100%;
+  max-height:55vh;
+  background:#000;
+  border-radius:6px;
+}
 
-    .channelName {
-      margin-top: 8px;
-      font-weight: bold;
-      font-size: 14px;
-    }
+.now{
+  padding:10px 2px 3px;
+  font-weight:bold;
+}
 
-    .category {
-      margin-top: 5px;
-      color: #aaa;
-      font-size: 12px;
-    }
+.status{
+  text-align:center;
+  color:#aaa;
+  padding:18px 10px;
+}
 
-    #status {
-      text-align: center;
-      padding: 20px;
-      color: #aaa;
-    }
-  </style>
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  padding:10px;
+}
+
+.card{
+  background:#171717;
+  border-radius:12px;
+  padding:8px;
+  cursor:pointer;
+  overflow:hidden;
+  transition:.15s;
+}
+
+.card:active{
+  transform:scale(.97);
+}
+
+.logoBox{
+  height:90px;
+  background:#fff;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.logoBox img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.channelName{
+  font-weight:bold;
+  font-size:14px;
+  margin-top:8px;
+  line-height:1.25;
+}
+
+.group{
+  color:#999;
+  font-size:12px;
+  margin-top:5px;
+}
+
+.loadMore{
+  display:block;
+  margin:15px auto 30px;
+  padding:12px 25px;
+  border:0;
+  border-radius:10px;
+  background:#e50914;
+  color:white;
+  font-size:15px;
+}
+
+.empty{
+  text-align:center;
+  color:#aaa;
+  padding:30px;
+}
+
+@media(min-width:700px){
+  .grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>📺 Live TV</h1>
+
+  <div class="logo">
+    📺 India Live TV
+  </div>
+
   <input
     id="search"
-    type="text"
+    class="search"
+    type="search"
     placeholder="🔍 Channel search..."
   >
+
+  <div class="filters">
+    <button class="active" data-group="ALL">All</button>
+    <button data-group="News">News</button>
+    <button data-group="Entertainment">Entertainment</button>
+    <button data-group="Music">Music</button>
+    <button data-group="Sports">Sports</button>
+    <button data-group="Movies">Movies</button>
+    <button data-group="Kids">Kids</button>
+  </div>
+
 </header>
 
-<div id="playerBox">
-  <video id="video" controls playsinline></video>
-  <div id="nowPlaying"></div>
+
+<div id="playerBox" class="playerBox">
+
+  <video
+    id="video"
+    controls
+    playsinline
+    preload="none"
+  ></video>
+
+  <div id="nowPlaying" class="now">
+    कोई channel select करें
+  </div>
+
 </div>
 
-<div id="status">Channels load हो रहे हैं...</div>
-<div id="channels"></div>
+
+<div id="status" class="status">
+  Channels load हो रहे हैं...
+</div>
+
+
+<div id="channels" class="grid"></div>
+
+
+<button
+  id="loadMore"
+  class="loadMore"
+  style="display:none"
+>
+  और Channels दिखाएँ
+</button>
+
 
 <script>
-  const PLAYLIST_URL =
-    "https://iptv-org.github.io/iptv/index.m3u";
 
-  const channelsContainer =
-    document.getElementById("channels");
+const PLAYLIST_URL =
+"https://iptv-org.github.io/iptv/countries/in.m3u";
 
-  const status =
-    document.getElementById("status");
 
-  const search =
-    document.getElementById("search");
+const INITIAL_CHANNELS = 40;
+const LOAD_STEP = 40;
 
-  const playerBox =
-    document.getElementById("playerBox");
 
-  const video =
-    document.getElementById("video");
+let allChannels = [];
+let filteredChannels = [];
 
-  const nowPlaying =
-    document.getElementById("nowPlaying");
+let currentGroup = "ALL";
+let visibleCount = INITIAL_CHANNELS;
 
-  let channels = [];
+let hls = null;
 
-  async function loadPlaylist() {
-    try {
-      const response = await fetch(PLAYLIST_URL);
 
-      if (!response.ok) {
-        throw new Error("Playlist load failed");
-      }
+const video =
+document.getElementById("video");
 
-      const text = await response.text();
+const playerBox =
+document.getElementById("playerBox");
 
+const nowPlaying =
+document.getElementById("nowPlaying");
+
+const channelsBox =
+document.getElementById("channels");
+
+const status =
+document.getElementById("status");
+
+const search =
+document.getElementById("search");
+
+const loadMore =
+document.getElementById("loadMore");
+
+
+/* -----------------------------
+   LOAD PLAYLIST
+----------------------------- */
+
+async function loadPlaylist(){
+
+  try{
+
+    const response =
+      await fetch(PLAYLIST_URL, {
+        cache:"no-cache"
+      });
+
+    if(!response.ok){
+      throw new Error("Playlist error");
+    }
+
+    const text =
+      await response.text();
+
+    allChannels =
       parseM3U(text);
 
-      status.textContent =
-        channels.length + " channels loaded";
+    status.textContent =
+      allChannels.length +
+      " India channels available";
 
-      displayChannels(channels);
+    applyFilters();
 
-    } catch (error) {
-      console.error(error);
+  }catch(error){
 
-      status.textContent =
-        "Playlist load नहीं हो पाई।";
-    }
+    console.error(error);
+
+    status.textContent =
+      "❌ Playlist load नहीं हो पाई। Internet check करें।";
+
   }
 
-  function parseM3U(text) {
-    const lines = text.split(/\r?\n/);
+}
 
-    channels = [];
 
-    for (let i = 0; i < lines.length; i++) {
+/* -----------------------------
+   M3U PARSER
+----------------------------- */
 
-      if (lines[i].startsWith("#EXTINF")) {
+function parseM3U(text){
 
-        const info = lines[i];
+  const lines =
+    text.split(/\r?\n/);
 
-        const nameMatch =
-          info.match(/,(.*)$/);
+  const result = [];
 
-        const logoMatch =
-          info.match(/tvg-logo="([^"]*)"/);
+  let current = null;
 
-        const groupMatch =
-          info.match(/group-title="([^"]*)"/);
+  for(let i=0;i<lines.length;i++){
 
-        const name =
-          nameMatch
-            ? nameMatch[1].trim()
-            : "Unknown Channel";
+    const line =
+      lines[i].trim();
 
-        const logo =
+    if(!line) continue;
+
+
+    if(line.startsWith("#EXTINF")){
+
+      const comma =
+        line.indexOf(",");
+
+      let name =
+        comma >= 0
+        ? line.substring(comma + 1).trim()
+        : "Unknown Channel";
+
+
+      /* Remove accidental metadata */
+
+      name =
+        name
+        .replace(/#EXT.*$/,"")
+        .trim();
+
+
+      const logoMatch =
+        line.match(/tvg-logo="([^"]*)"/i);
+
+      const groupMatch =
+        line.match(/group-title="([^"]*)"/i);
+
+
+      current = {
+
+        name:
+          name || "Unknown Channel",
+
+        logo:
           logoMatch
-            ? logoMatch[1]
-            : "";
+          ? logoMatch[1]
+          : "",
 
-        const group =
+        group:
           groupMatch
-            ? groupMatch[1]
-            : "Other";
+          ? groupMatch[1]
+          : "Other",
 
-        let url = "";
+        url:""
 
-        for (
-          let j = i + 1;
-          j < lines.length;
-          j++
-        ) {
-          if (
-            lines[j].trim() &&
-            !lines[j].startsWith("#")
-          ) {
-            url = lines[j].trim();
-            break;
-          }
-        }
+      };
 
-        if (url) {
-          channels.push({
-            name,
-            logo,
-            group,
-            url
-          });
-        }
-      }
+      continue;
     }
+
+
+    /*
+      Ignore VLC options and other
+      #EXT lines.
+    */
+
+    if(line.startsWith("#")){
+      continue;
+    }
+
+
+    /*
+      Find the actual stream URL.
+    */
+
+    if(
+      current &&
+      (
+        line.startsWith("http://") ||
+        line.startsWith("https://")
+      )
+    ){
+
+      current.url = line;
+
+      result.push(current);
+
+      current = null;
+    }
+
   }
 
-  function displayChannels(list) {
+  return result;
+}
 
-    channelsContainer.innerHTML = "";
 
-    list.forEach(channel => {
+/* -----------------------------
+   FILTER
+----------------------------- */
 
-      const card =
-        document.createElement("div");
+function applyFilters(){
 
-      card.className = "channel";
+  const query =
+    search.value
+    .toLowerCase()
+    .trim();
 
-      card.innerHTML = `
-        ${
-          channel.logo
-          ? `<img src="${channel.logo}"
-                 onerror="this.style.display='none'">`
-          : ""
-        }
 
-        <div class="channelName">
-          ${escapeHTML(channel.name)}
-        </div>
+  filteredChannels =
+    allChannels.filter(channel => {
 
-        <div class="category">
-          ${escapeHTML(channel.group)}
-        </div>
-      `;
+      const matchesSearch =
+        !query ||
+        channel.name
+        .toLowerCase()
+        .includes(query);
 
-      card.onclick = () =>
-        playChannel(channel);
 
-      channelsContainer.appendChild(card);
+      const matchesGroup =
+        currentGroup === "ALL" ||
+        channel.group
+        .toLowerCase()
+        .includes(currentGroup.toLowerCase());
+
+
+      return matchesSearch && matchesGroup;
+
     });
+
+
+  visibleCount =
+    INITIAL_CHANNELS;
+
+  renderChannels();
+
+}
+
+
+/* -----------------------------
+   RENDER
+----------------------------- */
+
+function renderChannels(){
+
+  channelsBox.innerHTML = "";
+
+
+  const list =
+    filteredChannels
+    .slice(0, visibleCount);
+
+
+  if(list.length === 0){
+
+    channelsBox.innerHTML =
+      `<div class="empty">
+        😕 कोई channel नहीं मिला
+      </div>`;
+
+    loadMore.style.display =
+      "none";
+
+    return;
   }
 
-  function playChannel(channel) {
 
-    playerBox.style.display = "block";
+  const fragment =
+    document.createDocumentFragment();
 
-    nowPlaying.textContent =
-      "▶️ " + channel.name;
 
-    video.src = channel.url;
+  list.forEach(channel => {
 
-    video.play().catch(() => {});
+    const card =
+      document.createElement("div");
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    card.className =
+      "card";
+
+
+    const logoBox =
+      document.createElement("div");
+
+    logoBox.className =
+      "logoBox";
+
+
+    if(channel.logo){
+
+      const img =
+        document.createElement("img");
+
+      img.src =
+        channel.logo;
+
+      img.loading =
+        "lazy";
+
+      img.onerror =
+        function(){
+
+          this.style.display =
+            "none";
+
+        };
+
+      logoBox.appendChild(img);
+
+    }else{
+
+      logoBox.textContent =
+        "📺";
+
+      logoBox.style.fontSize =
+        "35px";
+
+    }
+
+
+    const name =
+      document.createElement("div");
+
+    name.className =
+      "channelName";
+
+    name.textContent =
+      channel.name;
+
+
+    const group =
+      document.createElement("div");
+
+    group.className =
+      "group";
+
+    group.textContent =
+      channel.group;
+
+
+    card.appendChild(logoBox);
+
+    card.appendChild(name);
+
+    card.appendChild(group);
+
+
+    card.onclick =
+      () => playChannel(channel);
+
+
+    fragment.appendChild(card);
+
+  });
+
+
+  channelsBox.appendChild(fragment);
+
+
+  if(visibleCount < filteredChannels.length){
+
+    loadMore.style.display =
+      "block";
+
+  }else{
+
+    loadMore.style.display =
+      "none";
+
   }
 
-  search.addEventListener(
-    "input",
-    function () {
+}
 
-      const query =
-        search.value.toLowerCase().trim();
 
-      const filtered =
-        channels.filter(channel =>
-          channel.name
-            .toLowerCase()
-            .includes(query)
-        );
+/* -----------------------------
+   LOAD MORE
+----------------------------- */
 
-      displayChannels(filtered);
+loadMore.onclick =
+function(){
+
+  visibleCount +=
+    LOAD_STEP;
+
+  renderChannels();
+
+};
+
+
+/* -----------------------------
+   SEARCH
+----------------------------- */
+
+search.addEventListener(
+  "input",
+  function(){
+
+    applyFilters();
+
+  }
+);
+
+
+/* -----------------------------
+   CATEGORY BUTTONS
+----------------------------- */
+
+document
+.querySelectorAll(".filters button")
+.forEach(button => {
+
+  button.addEventListener(
+    "click",
+    function(){
+
+      document
+      .querySelectorAll(".filters button")
+      .forEach(b =>
+        b.classList.remove("active")
+      );
+
+
+      this.classList.add("active");
+
+
+      currentGroup =
+        this.dataset.group;
+
+
+      applyFilters();
+
     }
   );
 
-  function escapeHTML(text) {
+});
 
-    return text
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+
+/* -----------------------------
+   HLS PLAYER
+----------------------------- */
+
+function playChannel(channel){
+
+  playerBox.style.display =
+    "block";
+
+
+  nowPlaying.textContent =
+    "▶️ " + channel.name;
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+
+  /* Destroy previous HLS instance */
+
+  if(hls){
+
+    hls.destroy();
+
+    hls = null;
+
   }
 
-  loadPlaylist();
+
+  video.pause();
+
+  video.removeAttribute("src");
+
+  video.load();
+
+
+  const url =
+    channel.url;
+
+
+  /*
+    Native HLS support
+  */
+
+  if(
+    video.canPlayType(
+      "application/vnd.apple.mpegurl"
+    )
+  ){
+
+    video.src = url;
+
+    video.play()
+    .catch(() => {});
+
+    return;
+  }
+
+
+  /*
+    HLS.js support
+  */
+
+  if(
+    window.Hls &&
+    Hls.isSupported()
+  ){
+
+    hls =
+      new Hls({
+
+        enableWorker:true,
+
+        lowLatencyMode:false,
+
+        backBufferLength:30,
+
+        maxBufferLength:20,
+
+        capLevelToPlayerSize:true
+
+      });
+
+
+    hls.loadSource(url);
+
+    hls.attachMedia(video);
+
+
+    hls.on(
+      Hls.Events.MANIFEST_PARSED,
+      function(){
+
+        video.play()
+        .catch(() => {});
+
+      }
+    );
+
+
+    hls.on(
+      Hls.Events.ERROR,
+      function(event,data){
+
+        console.log(
+          "HLS error:",
+          data
+        );
+
+
+        if(
+          data.fatal
+        ){
+
+          nowPlaying.textContent =
+            "❌ यह stream अभी नहीं चल रही: "
+            + channel.name;
+
+        }
+
+      }
+    );
+
+
+    return;
+  }
+
+
+  nowPlaying.textContent =
+    "❌ इस browser में HLS support नहीं है";
+
+}
+
+
+/* -----------------------------
+   START
+----------------------------- */
+
+loadPlaylist();
+
 </script>
 
 </body>
-  </html>
+      </html>
