@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>India Live TV</title>
+<title>Abhishek Pandey Live TV</title>
 
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
 
@@ -170,7 +170,7 @@ video{
 <header>
 
   <div class="logo">
-    📺 India Live TV
+    📺 Abhishek Pandey Live TV
   </div>
 
   <input
@@ -181,13 +181,39 @@ video{
   >
 
   <div class="filters">
-    <button class="active" data-group="ALL">All</button>
-    <button data-group="News">News</button>
-    <button data-group="Entertainment">Entertainment</button>
-    <button data-group="Music">Music</button>
-    <button data-group="Sports">Sports</button>
-    <button data-group="Movies">Movies</button>
-    <button data-group="Kids">Kids</button>
+
+    <button class="active" data-group="ALL">
+      All
+    </button>
+
+    <button data-group="Sony">
+      Sony
+    </button>
+
+    <button data-group="News">
+      News
+    </button>
+
+    <button data-group="Entertainment">
+      Entertainment
+    </button>
+
+    <button data-group="Music">
+      Music
+    </button>
+
+    <button data-group="Sports">
+      Sports
+    </button>
+
+    <button data-group="Movies">
+      Movies
+    </button>
+
+    <button data-group="Kids">
+      Kids
+    </button>
+
   </div>
 
 </header>
@@ -267,9 +293,9 @@ const loadMore =
 document.getElementById("loadMore");
 
 
-/* -----------------------------
+/* =============================
    LOAD PLAYLIST
------------------------------ */
+============================= */
 
 async function loadPlaylist(){
 
@@ -308,9 +334,9 @@ async function loadPlaylist(){
 }
 
 
-/* -----------------------------
+/* =============================
    M3U PARSER
------------------------------ */
+============================= */
 
 function parseM3U(text){
 
@@ -339,8 +365,6 @@ function parseM3U(text){
         ? line.substring(comma + 1).trim()
         : "Unknown Channel";
 
-
-      /* Remove accidental metadata */
 
       name =
         name
@@ -378,19 +402,10 @@ function parseM3U(text){
     }
 
 
-    /*
-      Ignore VLC options and other
-      #EXT lines.
-    */
-
     if(line.startsWith("#")){
       continue;
     }
 
-
-    /*
-      Find the actual stream URL.
-    */
 
     if(
       current &&
@@ -413,9 +428,29 @@ function parseM3U(text){
 }
 
 
-/* -----------------------------
+/* =============================
+   CATEGORY CHECK
+============================= */
+
+function isSonyChannel(channel){
+
+  const name =
+    channel.name.toLowerCase();
+
+  const group =
+    channel.group.toLowerCase();
+
+  return (
+    name.includes("sony") ||
+    group.includes("sony")
+  );
+
+}
+
+
+/* =============================
    FILTER
------------------------------ */
+============================= */
 
 function applyFilters(){
 
@@ -435,11 +470,31 @@ function applyFilters(){
         .includes(query);
 
 
-      const matchesGroup =
-        currentGroup === "ALL" ||
-        channel.group
-        .toLowerCase()
-        .includes(currentGroup.toLowerCase());
+      let matchesGroup = true;
+
+
+      if(currentGroup === "Sony"){
+
+        /*
+          Sony category में channel name
+          या group-title में Sony होना चाहिए.
+        */
+
+        matchesGroup =
+          isSonyChannel(channel);
+
+      }
+
+      else if(currentGroup !== "ALL"){
+
+        matchesGroup =
+          channel.group
+          .toLowerCase()
+          .includes(
+            currentGroup.toLowerCase()
+          );
+
+      }
 
 
       return matchesSearch && matchesGroup;
@@ -455,9 +510,9 @@ function applyFilters(){
 }
 
 
-/* -----------------------------
-   RENDER
------------------------------ */
+/* =============================
+   RENDER CHANNELS
+============================= */
 
 function renderChannels(){
 
@@ -473,7 +528,7 @@ function renderChannels(){
 
     channelsBox.innerHTML =
       `<div class="empty">
-        😕 कोई channel नहीं मिला
+        😕 इस category में कोई channel नहीं मिला
       </div>`;
 
     loadMore.style.display =
@@ -514,6 +569,9 @@ function renderChannels(){
       img.loading =
         "lazy";
 
+      img.alt =
+        channel.name;
+
       img.onerror =
         function(){
 
@@ -552,7 +610,9 @@ function renderChannels(){
       "group";
 
     group.textContent =
-      channel.group;
+      isSonyChannel(channel)
+      ? "Sony"
+      : channel.group;
 
 
     card.appendChild(logoBox);
@@ -574,7 +634,10 @@ function renderChannels(){
   channelsBox.appendChild(fragment);
 
 
-  if(visibleCount < filteredChannels.length){
+  if(
+    visibleCount <
+    filteredChannels.length
+  ){
 
     loadMore.style.display =
       "block";
@@ -589,9 +652,9 @@ function renderChannels(){
 }
 
 
-/* -----------------------------
+/* =============================
    LOAD MORE
------------------------------ */
+============================= */
 
 loadMore.onclick =
 function(){
@@ -604,9 +667,9 @@ function(){
 };
 
 
-/* -----------------------------
+/* =============================
    SEARCH
------------------------------ */
+============================= */
 
 search.addEventListener(
   "input",
@@ -618,9 +681,9 @@ search.addEventListener(
 );
 
 
-/* -----------------------------
+/* =============================
    CATEGORY BUTTONS
------------------------------ */
+============================= */
 
 document
 .querySelectorAll(".filters button")
@@ -652,9 +715,9 @@ document
 });
 
 
-/* -----------------------------
+/* =============================
    HLS PLAYER
------------------------------ */
+============================= */
 
 function playChannel(channel){
 
@@ -671,8 +734,6 @@ function playChannel(channel){
     behavior:"smooth"
   });
 
-
-  /* Destroy previous HLS instance */
 
   if(hls){
 
@@ -694,10 +755,6 @@ function playChannel(channel){
     channel.url;
 
 
-  /*
-    Native HLS support
-  */
-
   if(
     video.canPlayType(
       "application/vnd.apple.mpegurl"
@@ -712,10 +769,6 @@ function playChannel(channel){
     return;
   }
 
-
-  /*
-    HLS.js support
-  */
 
   if(
     window.Hls &&
@@ -764,9 +817,7 @@ function playChannel(channel){
         );
 
 
-        if(
-          data.fatal
-        ){
+        if(data.fatal){
 
           nowPlaying.textContent =
             "❌ यह stream अभी नहीं चल रही: "
@@ -776,7 +827,6 @@ function playChannel(channel){
 
       }
     );
-
 
     return;
   }
@@ -788,13 +838,13 @@ function playChannel(channel){
 }
 
 
-/* -----------------------------
+/* =============================
    START
------------------------------ */
+============================= */
 
 loadPlaylist();
 
 </script>
 
 </body>
-      </html>
+  </html>
