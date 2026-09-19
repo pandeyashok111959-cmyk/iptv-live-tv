@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Abhishek Pandey Live TV</title>
 
@@ -13,53 +13,36 @@
   box-sizing:border-box;
 }
 
-html{
-  scroll-behavior:smooth;
-}
-
 body{
   margin:0;
-  background:#070707;
+  background:#0b0b0b;
   color:#fff;
   font-family:Arial,sans-serif;
 }
-
-/* HEADER */
 
 header{
   position:sticky;
   top:0;
   z-index:100;
-  background:rgba(10,10,10,.96);
-  backdrop-filter:blur(12px);
+  background:#111;
   padding:15px;
-  border-bottom:1px solid #242424;
+  border-bottom:1px solid #292929;
 }
 
 .logo{
   text-align:center;
-  font-size:23px;
-  font-weight:800;
-  margin-bottom:13px;
-}
-
-.logo span{
-  color:#e50914;
+  font-size:25px;
+  font-weight:bold;
+  margin-bottom:12px;
 }
 
 .search{
   width:100%;
-  padding:13px 16px;
-  border:1px solid #333;
-  border-radius:12px;
-  background:#181818;
-  color:white;
+  padding:13px 15px;
+  border:0;
+  border-radius:10px;
   font-size:16px;
   outline:none;
-}
-
-.search:focus{
-  border-color:#e50914;
 }
 
 .filters{
@@ -67,53 +50,26 @@ header{
   gap:8px;
   overflow-x:auto;
   padding:12px 0 2px;
-  scrollbar-width:none;
-}
-
-.filters::-webkit-scrollbar{
-  display:none;
 }
 
 .filters button{
   flex:none;
   border:0;
-  padding:9px 15px;
-  border-radius:22px;
-  background:#242424;
-  color:#fff;
+  padding:8px 14px;
+  border-radius:20px;
+  background:#252525;
+  color:white;
   cursor:pointer;
-  font-size:13px;
 }
 
 .filters button.active{
-  background:linear-gradient(135deg,#e50914,#b00000);
+  background:#e50914;
 }
-
-/* WHATSAPP */
-
-.whatsapp{
-  display:flex;
-  justify-content:center;
-  padding:12px 10px 3px;
-}
-
-.whatsapp a{
-  text-decoration:none;
-  color:#fff;
-  background:#168c45;
-  padding:11px 20px;
-  border-radius:25px;
-  font-weight:bold;
-  font-size:14px;
-}
-
-/* PLAYER */
 
 .playerBox{
   display:none;
   background:#000;
   padding:10px;
-  border-bottom:1px solid #222;
 }
 
 video{
@@ -121,53 +77,19 @@ video{
   width:100%;
   max-height:55vh;
   background:#000;
-  border-radius:10px;
-}
-
-.playerTop{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:9px 2px;
+  border-radius:6px;
 }
 
 .now{
+  padding:10px 2px 3px;
   font-weight:bold;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
 }
-
-.qualityBox{
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
-.qualityBox label{
-  color:#aaa;
-  font-size:12px;
-}
-
-#qualitySelect{
-  background:#202020;
-  color:white;
-  border:1px solid #444;
-  border-radius:7px;
-  padding:6px 8px;
-}
-
-/* STATUS */
 
 .status{
   text-align:center;
-  color:#999;
-  padding:17px 10px;
-  font-size:13px;
+  color:#aaa;
+  padding:18px 10px;
 }
-
-/* CHANNEL GRID */
 
 .grid{
   display:grid;
@@ -177,19 +99,12 @@ video{
 }
 
 .card{
-  position:relative;
-  background:linear-gradient(145deg,#191919,#111);
-  border:1px solid #242424;
-  border-radius:14px;
+  background:#171717;
+  border-radius:12px;
   padding:8px;
   cursor:pointer;
   overflow:hidden;
-  transition:.18s;
-}
-
-.card:hover{
-  transform:translateY(-3px);
-  border-color:#444;
+  transition:.15s;
 }
 
 .card:active{
@@ -199,7 +114,7 @@ video{
 .logoBox{
   height:90px;
   background:#fff;
-  border-radius:9px;
+  border-radius:8px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -216,39 +131,14 @@ video{
   font-weight:bold;
   font-size:14px;
   margin-top:8px;
-  padding-right:30px;
   line-height:1.25;
 }
 
 .group{
-  color:#888;
+  color:#999;
   font-size:12px;
   margin-top:5px;
 }
-
-/* FAVORITE */
-
-.favoriteBtn{
-  position:absolute;
-  right:9px;
-  bottom:9px;
-  width:30px;
-  height:30px;
-  border:0;
-  border-radius:50%;
-  background:#292929;
-  color:#aaa;
-  font-size:17px;
-  cursor:pointer;
-  z-index:3;
-}
-
-.favoriteBtn.active{
-  color:#ffd000;
-  background:#3a3000;
-}
-
-/* LOAD MORE */
 
 .loadMore{
   display:block;
@@ -259,33 +149,17 @@ video{
   background:#e50914;
   color:white;
   font-size:15px;
-  cursor:pointer;
 }
 
 .empty{
   text-align:center;
-  color:#999;
-  padding:35px 15px;
-  grid-column:1/-1;
-}
-
-footer{
-  text-align:center;
-  color:#666;
-  font-size:12px;
-  padding:25px 10px 35px;
+  color:#aaa;
+  padding:30px;
 }
 
 @media(min-width:700px){
-
   .grid{
     grid-template-columns:repeat(4,minmax(0,1fr));
-    padding:15px;
-  }
-
-  header{
-    padding-left:8%;
-    padding-right:8%;
   }
 }
 </style>
@@ -296,7 +170,7 @@ footer{
 <header>
 
   <div class="logo">
-    📺 <span>Abhishek Pandey</span> Live TV
+    📺 Abhishek Pandey Live TV
   </div>
 
   <input
@@ -310,10 +184,6 @@ footer{
 
     <button class="active" data-group="ALL">
       All
-    </button>
-
-    <button data-group="FAVORITES">
-      ⭐ Favorites
     </button>
 
     <button data-group="Sony">
@@ -346,22 +216,8 @@ footer{
 
   </div>
 
-  <div class="whatsapp">
-
-    <a
-      href="https://whatsapp.com/channel/0029Vb8wniPL2ATxBNDoh33A"
-      target="_blank"
-      rel="noopener"
-    >
-      🟢 Join WhatsApp Channel
-    </a>
-
-  </div>
-
 </header>
 
-
-<!-- PLAYER -->
 
 <div id="playerBox" class="playerBox">
 
@@ -372,26 +228,8 @@ footer{
     preload="none"
   ></video>
 
-  <div class="playerTop">
-
-    <div id="nowPlaying" class="now">
-      कोई channel select करें
-    </div>
-
-    <div class="qualityBox">
-
-      <label for="qualitySelect">
-        Quality
-      </label>
-
-      <select id="qualitySelect">
-        <option value="-1">
-          Auto
-        </option>
-      </select>
-
-    </div>
-
+  <div id="nowPlaying" class="now">
+    कोई channel select करें
   </div>
 
 </div>
@@ -414,30 +252,15 @@ footer{
 </button>
 
 
-<footer>
-  © 2026 Abhishek Pandey Live TV
-</footer>
-
-
 <script>
-
-/* =====================================
-   SETTINGS
-===================================== */
 
 const PLAYLIST_URL =
 "https://iptv-org.github.io/iptv/countries/in.m3u";
 
-const WHATSAPP_URL =
-"https://whatsapp.com/channel/0029Vb8wniPL2ATxBNDoh33A";
 
 const INITIAL_CHANNELS = 40;
 const LOAD_STEP = 40;
 
-
-/* =====================================
-   VARIABLES
-===================================== */
 
 let allChannels = [];
 let filteredChannels = [];
@@ -448,10 +271,6 @@ let visibleCount = INITIAL_CHANNELS;
 let hls = null;
 
 
-/* =====================================
-   ELEMENTS
-===================================== */
-
 const video =
 document.getElementById("video");
 
@@ -460,9 +279,6 @@ document.getElementById("playerBox");
 
 const nowPlaying =
 document.getElementById("nowPlaying");
-
-const qualitySelect =
-document.getElementById("qualitySelect");
 
 const channelsBox =
 document.getElementById("channels");
@@ -477,95 +293,21 @@ const loadMore =
 document.getElementById("loadMore");
 
 
-/* =====================================
-   FAVORITES
-===================================== */
-
-let favorites =
-JSON.parse(
-  localStorage.getItem(
-    "abhi_live_tv_favorites"
-  ) || "[]"
-);
-
-
-function saveFavorites(){
-
-  localStorage.setItem(
-    "abhi_live_tv_favorites",
-    JSON.stringify(favorites)
-  );
-
-}
-
-
-function channelKey(channel){
-
-  return (
-    channel.name +
-    "|" +
-    channel.url
-  );
-
-}
-
-
-function isFavorite(channel){
-
-  return favorites.includes(
-    channelKey(channel)
-  );
-
-}
-
-
-function toggleFavorite(channel){
-
-  const key =
-    channelKey(channel);
-
-  if(favorites.includes(key)){
-
-    favorites =
-      favorites.filter(
-        item => item !== key
-      );
-
-  }else{
-
-    favorites.push(key);
-
-  }
-
-  saveFavorites();
-
-  renderChannels();
-
-}
-
-
-/* =====================================
+/* =============================
    LOAD PLAYLIST
-===================================== */
+============================= */
 
 async function loadPlaylist(){
 
   try{
 
     const response =
-      await fetch(
-        PLAYLIST_URL,
-        {
-          cache:"no-cache"
-        }
-      );
+      await fetch(PLAYLIST_URL, {
+        cache:"no-cache"
+      });
 
     if(!response.ok){
-
-      throw new Error(
-        "Playlist error"
-      );
-
+      throw new Error("Playlist error");
     }
 
     const text =
@@ -592,9 +334,9 @@ async function loadPlaylist(){
 }
 
 
-/* =====================================
+/* =============================
    M3U PARSER
-===================================== */
+============================= */
 
 function parseM3U(text){
 
@@ -631,15 +373,10 @@ function parseM3U(text){
 
 
       const logoMatch =
-        line.match(
-          /tvg-logo="([^"]*)"/i
-        );
-
+        line.match(/tvg-logo="([^"]*)"/i);
 
       const groupMatch =
-        line.match(
-          /group-title="([^"]*)"/i
-        );
+        line.match(/group-title="([^"]*)"/i);
 
 
       current = {
@@ -678,27 +415,22 @@ function parseM3U(text){
       )
     ){
 
-      current.url =
-        line;
+      current.url = line;
 
-      result.push(
-        current
-      );
+      result.push(current);
 
       current = null;
-
     }
 
   }
 
   return result;
-
 }
 
 
-/* =====================================
-   SONY CHECK
-===================================== */
+/* =============================
+   CATEGORY CHECK
+============================= */
 
 function isSonyChannel(channel){
 
@@ -708,7 +440,6 @@ function isSonyChannel(channel){
   const group =
     channel.group.toLowerCase();
 
-
   return (
     name.includes("sony") ||
     group.includes("sony")
@@ -717,9 +448,9 @@ function isSonyChannel(channel){
 }
 
 
-/* =====================================
+/* =============================
    FILTER
-===================================== */
+============================= */
 
 function applyFilters(){
 
@@ -730,65 +461,45 @@ function applyFilters(){
 
 
   filteredChannels =
-    allChannels.filter(
-      channel => {
+    allChannels.filter(channel => {
 
-        const matchesSearch =
-          !query ||
-          channel.name
-          .toLowerCase()
-          .includes(query);
-
-
-        let matchesGroup =
-          true;
+      const matchesSearch =
+        !query ||
+        channel.name
+        .toLowerCase()
+        .includes(query);
 
 
-        if(
-          currentGroup ===
-          "FAVORITES"
-        ){
-
-          matchesGroup =
-            isFavorite(channel);
-
-        }
-
-        else if(
-          currentGroup ===
-          "Sony"
-        ){
-
-          matchesGroup =
-            isSonyChannel(
-              channel
-            );
-
-        }
-
-        else if(
-          currentGroup !==
-          "ALL"
-        ){
-
-          matchesGroup =
-            channel.group
-            .toLowerCase()
-            .includes(
-              currentGroup
-              .toLowerCase()
-            );
-
-        }
+      let matchesGroup = true;
 
 
-        return (
-          matchesSearch &&
-          matchesGroup
-        );
+      if(currentGroup === "Sony"){
+
+        /*
+          Sony category में channel name
+          या group-title में Sony होना चाहिए.
+        */
+
+        matchesGroup =
+          isSonyChannel(channel);
 
       }
-    );
+
+      else if(currentGroup !== "ALL"){
+
+        matchesGroup =
+          channel.group
+          .toLowerCase()
+          .includes(
+            currentGroup.toLowerCase()
+          );
+
+      }
+
+
+      return matchesSearch && matchesGroup;
+
+    });
 
 
   visibleCount =
@@ -799,9 +510,9 @@ function applyFilters(){
 }
 
 
-/* =====================================
-   RENDER
-===================================== */
+/* =============================
+   RENDER CHANNELS
+============================= */
 
 function renderChannels(){
 
@@ -810,10 +521,7 @@ function renderChannels(){
 
   const list =
     filteredChannels
-    .slice(
-      0,
-      visibleCount
-    );
+    .slice(0, visibleCount);
 
 
   if(list.length === 0){
@@ -827,7 +535,6 @@ function renderChannels(){
       "none";
 
     return;
-
   }
 
 
@@ -835,9 +542,309 @@ function renderChannels(){
     document.createDocumentFragment();
 
 
-  list.forEach(
-    channel => {
+  list.forEach(channel => {
 
-  
+    const card =
+      document.createElement("div");
 
-        
+    card.className =
+      "card";
+
+
+    const logoBox =
+      document.createElement("div");
+
+    logoBox.className =
+      "logoBox";
+
+
+    if(channel.logo){
+
+      const img =
+        document.createElement("img");
+
+      img.src =
+        channel.logo;
+
+      img.loading =
+        "lazy";
+
+      img.alt =
+        channel.name;
+
+      img.onerror =
+        function(){
+
+          this.style.display =
+            "none";
+
+        };
+
+      logoBox.appendChild(img);
+
+    }else{
+
+      logoBox.textContent =
+        "📺";
+
+      logoBox.style.fontSize =
+        "35px";
+
+    }
+
+
+    const name =
+      document.createElement("div");
+
+    name.className =
+      "channelName";
+
+    name.textContent =
+      channel.name;
+
+
+    const group =
+      document.createElement("div");
+
+    group.className =
+      "group";
+
+    group.textContent =
+      isSonyChannel(channel)
+      ? "Sony"
+      : channel.group;
+
+
+    card.appendChild(logoBox);
+
+    card.appendChild(name);
+
+    card.appendChild(group);
+
+
+    card.onclick =
+      () => playChannel(channel);
+
+
+    fragment.appendChild(card);
+
+  });
+
+
+  channelsBox.appendChild(fragment);
+
+
+  if(
+    visibleCount <
+    filteredChannels.length
+  ){
+
+    loadMore.style.display =
+      "block";
+
+  }else{
+
+    loadMore.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =============================
+   LOAD MORE
+============================= */
+
+loadMore.onclick =
+function(){
+
+  visibleCount +=
+    LOAD_STEP;
+
+  renderChannels();
+
+};
+
+
+/* =============================
+   SEARCH
+============================= */
+
+search.addEventListener(
+  "input",
+  function(){
+
+    applyFilters();
+
+  }
+);
+
+
+/* =============================
+   CATEGORY BUTTONS
+============================= */
+
+document
+.querySelectorAll(".filters button")
+.forEach(button => {
+
+  button.addEventListener(
+    "click",
+    function(){
+
+      document
+      .querySelectorAll(".filters button")
+      .forEach(b =>
+        b.classList.remove("active")
+      );
+
+
+      this.classList.add("active");
+
+
+      currentGroup =
+        this.dataset.group;
+
+
+      applyFilters();
+
+    }
+  );
+
+});
+
+
+/* =============================
+   HLS PLAYER
+============================= */
+
+function playChannel(channel){
+
+  playerBox.style.display =
+    "block";
+
+
+  nowPlaying.textContent =
+    "▶️ " + channel.name;
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+
+  if(hls){
+
+    hls.destroy();
+
+    hls = null;
+
+  }
+
+
+  video.pause();
+
+  video.removeAttribute("src");
+
+  video.load();
+
+
+  const url =
+    channel.url;
+
+
+  if(
+    video.canPlayType(
+      "application/vnd.apple.mpegurl"
+    )
+  ){
+
+    video.src = url;
+
+    video.play()
+    .catch(() => {});
+
+    return;
+  }
+
+
+  if(
+    window.Hls &&
+    Hls.isSupported()
+  ){
+
+    hls =
+      new Hls({
+
+        enableWorker:true,
+
+        lowLatencyMode:false,
+
+        backBufferLength:30,
+
+        maxBufferLength:20,
+
+        capLevelToPlayerSize:true
+
+      });
+
+
+    hls.loadSource(url);
+
+    hls.attachMedia(video);
+
+
+    hls.on(
+      Hls.Events.MANIFEST_PARSED,
+      function(){
+
+        video.play()
+        .catch(() => {});
+
+      }
+    );
+
+
+    hls.on(
+      Hls.Events.ERROR,
+      function(event,data){
+
+        console.log(
+          "HLS error:",
+          data
+        );
+
+
+        if(data.fatal){
+
+          nowPlaying.textContent =
+            "❌ यह stream अभी नहीं चल रही: "
+            + channel.name;
+
+        }
+
+      }
+    );
+
+    return;
+  }
+
+
+  nowPlaying.textContent =
+    "❌ इस browser में HLS support नहीं है";
+
+}
+
+
+/* =============================
+   START
+============================= */
+
+loadPlaylist();
+
+</script>
+
+</body>
+      </html>
