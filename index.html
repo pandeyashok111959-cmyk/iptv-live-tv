@@ -843,7 +843,386 @@ function playChannel(channel){
 ============================= */
 
 loadPlaylist();
+/* =============================
+   FAVORITES SYSTEM
+============================= */
 
+let favoriteChannels =
+  JSON.parse(
+    localStorage.getItem("favoriteChannels") || "[]"
+  );
+
+
+function isFavorite(channel){
+
+  return favoriteChannels.some(
+    url => url === channel.url
+  );
+
+}
+
+
+function toggleFavorite(channel){
+
+  const index =
+    favoriteChannels.indexOf(channel.url);
+
+
+  if(index === -1){
+
+    favoriteChannels.push(channel.url);
+
+  }else{
+
+    favoriteChannels.splice(index, 1);
+
+  }
+
+
+  localStorage.setItem(
+    "favoriteChannels",
+    JSON.stringify(favoriteChannels)
+  );
+
+
+  applyFilters();
+
+}
+
+
+/* =============================
+   FAVORITES CATEGORY
+============================= */
+
+function applyFiltersWithFavorites(){
+
+  const query =
+    search.value
+    .toLowerCase()
+    .trim();
+
+
+  if(currentGroup === "Favorites"){
+
+    filteredChannels =
+      allChannels.filter(channel => {
+
+        const favorite =
+          isFavorite(channel);
+
+        const matchesSearch =
+          !query ||
+          channel.name
+          .toLowerCase()
+          .includes(query);
+
+        return favorite && matchesSearch;
+
+      });
+
+
+    visibleCount =
+      INITIAL_CHANNELS;
+
+    renderChannels();
+
+    return;
+
+  }
+
+
+  applyFilters();
+
+}
+
+
+/* =============================
+   OVERRIDE FILTER
+============================= */
+
+const originalApplyFilters =
+  applyFilters;
+
+
+applyFilters = function(){
+
+  const query =
+    search.value
+    .toLowerCase()
+    .trim();
+
+
+  if(currentGroup === "Favorites"){
+
+    filteredChannels =
+      allChannels.filter(channel => {
+
+        return (
+          isFavorite(channel) &&
+          (
+            !query ||
+            channel.name
+            .toLowerCase()
+            .includes(query)
+          )
+        );
+
+      });
+
+
+    visibleCount =
+      INITIAL_CHANNELS;
+
+    renderChannels();
+
+    return;
+
+  }
+
+
+  originalApplyFilters();
+
+};
+
+
+/* =============================
+   FAVORITE BUTTON IN CARD
+============================= */
+
+const originalRenderChannels =
+  renderChannels;
+
+
+renderChannels = function(){
+
+  channelsBox.innerHTML = "";
+
+
+  const list =
+    filteredChannels
+    .slice(0, visibleCount);
+
+
+  if(list.length === 0){
+
+    channelsBox.innerHTML =
+      `<div class="empty">
+        😕 इस category में कोई channel नहीं मिला
+      </div>`;
+
+    loadMore.style.display =
+      "none";
+
+    return;
+
+  }
+
+
+  const fragment =
+    document.createDocumentFragment();
+
+
+  list.forEach(channel => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "card";
+
+
+    /* Logo */
+
+    const logoBox =
+      document.createElement("div");
+
+    logoBox.className =
+      "logoBox";
+
+
+    if(channel.logo){
+
+      const img =
+        document.createElement("img");
+
+      img.src =
+        channel.logo;
+
+      img.loading =
+        "lazy";
+
+      img.alt =
+        channel.name;
+
+      img.onerror =
+        function(){
+
+          this.style.display =
+            "none";
+
+        };
+
+      logoBox.appendChild(img);
+
+    }else{
+
+      logoBox.textContent =
+        "📺";
+
+      logoBox.style.fontSize =
+        "35px";
+
+    }
+
+
+    /* Channel name */
+
+    const name =
+      document.createElement("div");
+
+    name.className =
+      "channelName";
+
+    name.textContent =
+      channel.name;
+
+
+    /* Group */
+
+    const group =
+      document.createElement("div");
+
+    group.className =
+      "group";
+
+    group.textContent =
+      isSonyChannel(channel)
+      ? "Sony"
+      : channel.group;
+
+
+    /* Favorite button */
+
+    const favorite =
+      document.createElement("button");
+
+    favorite.textContent =
+      isFavorite(channel)
+      ? "⭐"
+      : "☆";
+
+    favorite.style.cssText = `
+      float:right;
+      border:0;
+      background:transparent;
+      color:#ffd700;
+      font-size:22px;
+      cursor:pointer;
+      padding:0;
+      margin-top:-4px;
+    `;
+
+
+    favorite.onclick =
+      function(event){
+
+        event.stopPropagation();
+
+        toggleFavorite(channel);
+
+      };
+
+
+    name.appendChild(favorite);
+
+
+    card.appendChild(logoBox);
+
+    card.appendChild(name);
+
+    card.appendChild(group);
+
+
+    card.onclick =
+      () => playChannel(channel);
+
+
+    fragment.appendChild(card);
+
+  });
+
+
+  channelsBox.appendChild(fragment);
+
+
+  if(
+    visibleCount <
+    filteredChannels.length
+  ){
+
+    loadMore.style.display =
+      "block";
+
+  }else{
+
+    loadMore.style.display =
+      "none";
+
+  }
+
+};
+
+
+/* =============================
+   ADD FAVORITES CATEGORY
+============================= */
+
+const filters =
+  document.querySelector(".filters");
+
+
+const favoritesButton =
+  document.createElement("button");
+
+
+favoritesButton.dataset.group =
+  "Favorites";
+
+favoritesButton.textContent =
+  "⭐ Favorites";
+
+
+filters.appendChild(
+  favoritesButton
+);
+
+
+/* =============================
+   FAVORITES BUTTON CLICK
+============================= */
+
+favoritesButton.addEventListener(
+  "click",
+  function(){
+
+    document
+    .querySelectorAll(".filters button")
+    .forEach(b =>
+      b.classList.remove("active")
+    );
+
+
+    this.classList.add("active");
+
+
+    currentGroup =
+      "Favorites";
+
+
+    applyFilters();
+
+  }
+);
 </script>
 
 </body>
